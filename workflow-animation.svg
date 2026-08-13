@@ -1,0 +1,613 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" width="1400" height="900">
+  <defs>
+    <!-- Color Palette -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2f7"/>
+    </linearGradient>
+    <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="nodeGradGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+    <linearGradient id="nodeGradOrange" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="nodeGradRed" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <linearGradient id="nodeGradPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#9333ea"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+    <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#22c55e" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+    <filter id="pulseGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.2  0 0 0 0 0.6  0 0 0 0 1  0 0 0 1 0"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Markers -->
+    <marker id="arrowhead" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,10 L12,5 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowheadFlow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,10 L12,5 Z" fill="url(#flowGrad)"/>
+    </marker>
+
+    <!-- Patterns -->
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="diagLines" width="10" height="10" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="10" x2="10" y2="0" stroke="#e2e8f0" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="900" fill="url(#bgGrad)"/>
+  <rect width="1400" height="900" fill="url(#grid)"/>
+
+  <!-- Title -->
+  <text x="700" y="45" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="700" fill="#1e293b">
+    Custom Compiler Microservice - Animated Data Flow
+  </text>
+  <text x="700" y="72" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#64748b">
+    Sandboxed Docker Code Execution Pipeline
+  </text>
+
+  <!-- Legend -->
+  <g id="legend" transform="translate(20, 820)">
+    <rect x="0" y="0" width="340" height="60" rx="8" fill="white" filter="url(#shadow)" stroke="#e2e8f0"/>
+    <g font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#334155">
+      <circle cx="20" cy="18" r="7" fill="url(#nodeGrad)"/><text x="35" y="22">Client / API Layer</text>
+      <circle cx="180" cy="18" r="7" fill="url(#nodeGradGreen)"/><text x="195" y="22">Auth / Routing</text>
+      <circle cx="20" cy="44" r="7" fill="url(#nodeGradOrange)"/><text x="35" y="48">Execution Services</text>
+      <circle cx="180" cy="44" r="7" fill="url(#nodeGradPurple)"/><text x="195" y="48">Docker Sandbox</text>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       LAYER 1: CLIENT LAYER (Top)
+       ============================================================ -->
+  <g id="layer-client">
+    <!-- Client Box -->
+    <g class="node-group" transform="translate(150, 130)">
+      <rect x="0" y="0" width="280" height="100" rx="16" fill="white" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="filter" values="url(#shadow);url(#glow);url(#shadow)" dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <text x="140" y="35" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#1e293b">CodeNexus Main Backend</text>
+      <text x="140" y="55" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#64748b">Port 4000</text>
+      <text x="140" y="75" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">HTTP POST /execute</text>
+      <text x="140" y="90" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">x-api-key header</text>
+    </g>
+
+    <!-- Flow arrow from client to auth -->
+    <path id="arrow-client-auth" class="flow-arrow" d="M290,180 Q415,180 415,210" stroke="url(#arrowGrad)" stroke-width="3" fill="none" marker-end="url(#arrowhead)" opacity="0.6">
+      <animate attributeName="stroke" values="url(#arrowGrad);url(#flowGrad);url(#arrowGrad)" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <!-- Moving dot along path -->
+    <circle r="6" fill="#22c55e" filter="url(#pulseGlow)">
+      <animateMotion dur="2s" repeatCount="indefinite" rotate="auto">
+        <mpath href="#arrow-client-auth"/>
+      </animateMotion>
+    </circle>
+  </g>
+
+  <!-- ============================================================
+       LAYER 2: CUSTOM COMPILER MICROSERVICE
+       ============================================================ -->
+  <g id="layer-compiler" transform="translate(450, 130)">
+    <!-- Auth Middleware -->
+    <g class="node-group" transform="translate(0, 0)">
+      <rect x="0" y="0" width="200" height="90" rx="12" fill="white" stroke="#22c55e" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+      </rect>
+      <circle cx="30" cy="25" r="14" fill="url(#nodeGradGreen)"><animate attributeName="r" values="14;16;14" dur="1.5s" repeatCount="indefinite"/></circle>
+      <text x="30" y="29" text-anchor="middle" font-size="16" fill="white">🔐</text>
+      <text x="100" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#1e293b">Auth Middleware</text>
+      <text x="100" y="45" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">x-api-key validation</text>
+      <text x="100" y="62" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">CORS: ALLOWED_BACKEND_URL</text>
+    </g>
+
+    <!-- Arrow Auth -> Router -->
+    <path id="arrow-auth-router" class="flow-arrow" d="M200,45 Q250,45 250,75" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.6">
+      <animate attributeName="stroke" values="url(#arrowGrad);url(#flowGrad);url(#arrowGrad)" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+    </path>
+    <circle r="5" fill="#22c55e" filter="url(#pulseGlow)">
+      <animateMotion dur="1.5s" repeatCount="indefinite" rotate="auto" begin="0.5s">
+        <mpath href="#arrow-auth-router"/>
+      </animateMotion>
+    </circle>
+
+    <!-- Express Router -->
+    <g class="node-group" transform="translate(250, 60)">
+      <rect x="0" y="0" width="220" height="110" rx="12" fill="white" stroke="#22c55e" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="3s" repeatCount="indefinite" begin="0.8s"/>
+      </rect>
+      <circle cx="30" cy="25" r="14" fill="url(#nodeGradGreen)"><animate attributeName="r" values="14;16;14" dur="1.5s" repeatCount="indefinite" begin="0.8s"/></circle>
+      <text x="30" y="29" text-anchor="middle" font-size="16" fill="white">🛣️</text>
+      <text x="110" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#1e293b">Express Router</text>
+      <text x="110" y="42" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Port 5001</text>
+      <!-- Route buttons -->
+      <g font-family="system-ui, sans-serif" font-size="9" fill="#475569">
+        <rect x="15" y="52" width="85" height="18" rx="4" fill="#f0fdf4" stroke="#22c55e" stroke-width="0.5"/><text x="57.5" y="65" text-anchor="middle">GET /health</text>
+        <rect x="110" y="52" width="95" height="18" rx="4" fill="#f0fdf4" stroke="#22c55e" stroke-width="0.5"/><text x="157.5" y="65" text-anchor="middle">POST /single</text>
+        <rect x="15" y="75" width="95" height="18" rx="4" fill="#f0fdf4" stroke="#22c55e" stroke-width="0.5"/><text x="62.5" y="88" text-anchor="middle">POST /batch</text>
+        <rect x="110" y="75" width="95" height="18" rx="4" fill="#f0fdf4" stroke="#22c55e" stroke-width="0.5"/><text x="157.5" y="88" text-anchor="middle">POST /problem</text>
+      </g>
+    </g>
+
+    <!-- Router to Services arrows -->
+    <g transform="translate(470, 85)">
+      <path id="arrow-router-single" d="M0,0 Q40,-40 80,-20" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.5"/>
+      <circle r="4" fill="#f97316"><animateMotion dur="2s" repeatCount="indefinite" rotate="auto" begin="1s"><mpath href="#arrow-router-single"/></animateMotion></circle>
+      <path id="arrow-router-batch" d="M0,0 Q40,0 80,25" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.5"/>
+      <circle r="4" fill="#f97316"><animateMotion dur="2s" repeatCount="indefinite" rotate="auto" begin="1s"><mpath href="#arrow-router-batch"/></animateMotion></circle>
+      <path id="arrow-router-problem" d="M0,0 Q40,40 80,70" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.5"/>
+      <circle r="4" fill="#f97316"><animateMotion dur="2s" repeatCount="indefinite" rotate="auto" begin="1s"><mpath href="#arrow-router-problem"/></animateMotion></circle>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       LAYER 3: EXECUTION SERVICES
+       ============================================================ -->
+  <g id="layer-services" transform="translate(850, 100)">
+    <!-- executeSingleCode -->
+    <g class="node-group service-node" id="svc-single" transform="translate(0, 0)">
+      <rect x="0" y="0" width="220" height="100" rx="12" fill="white" stroke="#f97316" stroke-width="2" filter="url(#shadow)"/>
+      <circle cx="30" cy="25" r="14" fill="url(#nodeGradOrange)"><animate attributeName="r" values="14;16;14" dur="1.5s" repeatCount="indefinite" begin="1.2s"/></circle>
+      <text x="30" y="29" text-anchor="middle" font-size="16" fill="white">⚡</text>
+      <text x="110" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#1e293b">executeSingleCode</text>
+      <text x="110" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Single test case</text>
+      <text x="110" y="55" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">code, input, lang, timeout</text>
+      <text x="110" y="70" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">→ {status, output, runtime, memory}</text>
+    </g>
+
+    <!-- executeBatchCode -->
+    <g class="node-group service-node" id="svc-batch" transform="translate(0, 130)">
+      <rect x="0" y="0" width="220" height="100" rx="12" fill="white" stroke="#f97316" stroke-width="2" filter="url(#shadow)"/>
+      <circle cx="30" cy="25" r="14" fill="url(#nodeGradOrange)"><animate attributeName="r" values="14;16;14" dur="1.5s" repeatCount="indefinite" begin="1.4s"/></circle>
+      <text x="30" y="29" text-anchor="middle" font-size="16" fill="white">🔄</text>
+      <text x="110" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#1e293b">executeBatchCode</text>
+      <text x="110" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Multiple test cases</text>
+      <text x="110" y="55" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">Loops → executeSingleCode</text>
+      <text x="110" y="70" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">Aggregates: passed/total, peak mem</text>
+    </g>
+
+    <!-- evaluateProblemSubmission -->
+    <g class="node-group service-node" id="svc-problem" transform="translate(0, 260)">
+      <rect x="0" y="0" width="220" height="110" rx="12" fill="white" stroke="#f97316" stroke-width="2" filter="url(#shadow)"/>
+      <circle cx="30" cy="25" r="14" fill="url(#nodeGradOrange)"><animate attributeName="r" values="14;16;14" dur="1.5s" repeatCount="indefinite" begin="1.6s"/></circle>
+      <text x="30" y="29" text-anchor="middle" font-size="16" fill="white">📋</text>
+      <text x="110" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#1e293b">evaluateProblemSubmission</text>
+      <text x="110" y="40" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">Full problem evaluation</text>
+      <text x="110" y="55" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">Selects visible/hidden tests</text>
+      <text x="110" y="70" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">Runs reference solution if needed</text>
+      <text x="110" y="85" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8">→ executeBatchCode</text>
+    </g>
+
+    <!-- Service internal arrows -->
+    <g transform="translate(220, 145)">
+      <path id="arrow-batch-single" d="M0,0 Q50,0 100,-110" stroke="#f97316" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.7" stroke-dasharray="5,5"/>
+      <circle r="4" fill="#f97316"><animateMotion dur="2.5s" repeatCount="indefinite" rotate="auto" begin="1.5s"><mpath href="#arrow-batch-single"/></animateMotion></circle>
+      <path id="arrow-problem-batch" d="M0,115 Q50,115 100,5" stroke="#f97316" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.7" stroke-dasharray="5,5"/>
+      <circle r="4" fill="#f97316"><animateMotion dur="2.5s" repeatCount="indefinite" rotate="auto" begin="1.7s"><mpath href="#arrow-problem-batch"/></animateMotion></circle>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       LAYER 4: DOCKER SANDBOX EXECUTION (Right side, vertical flow)
+       ============================================================ -->
+  <g id="layer-docker" transform="translate(1120, 100)">
+    <!-- Title -->
+    <text x="130" y="-20" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#a855f7">Docker Sandbox Pipeline</text>
+
+    <!-- Step 1: Create Temp Dir -->
+    <g class="node-group docker-step" id="docker-step1" transform="translate(0, 0)">
+      <rect x="0" y="0" width="260" height="70" rx="10" fill="white" stroke="#a855f7" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="2s" repeatCount="indefinite" begin="2s"/>
+      </rect>
+      <circle cx="25" cy="35" r="16" fill="url(#nodeGradPurple)"><animate attributeName="r" values="16;18;16" dur="1s" repeatCount="indefinite" begin="2s"/></circle>
+      <text x="25" y="39" text-anchor="middle" font-size="18" fill="white">1</text>
+      <text x="130" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1e293b">Create Temp Directory</text>
+      <text x="130" y="45" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">job_{timestamp}_{random}</text>
+      <text x="130" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">fs.mkdirSync(tempDir, {recursive:true})</text>
+    </g>
+
+    <!-- Arrow 1->2 -->
+    <path id="arrow-d1-2" d="M130,70 L130,90" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.6"/>
+    <circle cx="130" cy="70" r="4" fill="#a855f7"><animateMotion dur="1.5s" repeatCount="indefinite" rotate="auto" begin="2.2s"><mpath href="#arrow-d1-2"/></animateMotion></circle>
+
+    <!-- Step 2: Write Files -->
+    <g class="node-group docker-step" id="docker-step2" transform="translate(0, 90)">
+      <rect x="0" y="0" width="260" height="70" rx="10" fill="white" stroke="#a855f7" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="2s" repeatCount="indefinite" begin="2.3s"/>
+      </rect>
+      <circle cx="25" cy="35" r="16" fill="url(#nodeGradPurple)"><animate attributeName="r" values="16;18;16" dur="1s" repeatCount="indefinite" begin="2.3s"/></circle>
+      <text x="25" y="39" text-anchor="middle" font-size="18" fill="white">2</text>
+      <text x="130" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1e293b">Write Code + Input Files</text>
+      <text x="130" y="45" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">solution.{cpp|java|js} + input.txt</text>
+      <text x="130" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">fs.writeFileSync(codeFile, code)</text>
+    </g>
+
+    <!-- Arrow 2->3 -->
+    <path id="arrow-d2-3" d="M130,160 L130,180" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.6"/>
+    <circle cx="130" cy="160" r="4" fill="#a855f7"><animateMotion dur="1.5s" repeatCount="indefinite" rotate="auto" begin="2.5s"><mpath href="#arrow-d2-3"/></animateMotion></circle>
+
+    <!-- Step 3: Docker Run -->
+    <g class="node-group docker-step" id="docker-step3" transform="translate(0, 180)">
+      <rect x="0" y="0" width="260" height="90" rx="10" fill="white" stroke="#a855f7" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="2s" repeatCount="indefinite" begin="2.6s"/>
+        <animate attributeName="filter" values="url(#shadow);url(#glow);url(#shadow)" dur="2s" repeatCount="indefinite" begin="2.6s"/>
+      </rect>
+      <circle cx="25" cy="35" r="16" fill="url(#nodeGradPurple)"><animate attributeName="r" values="16;19;16" dur="1s" repeatCount="indefinite" begin="2.6s"/></circle>
+      <text x="25" y="39" text-anchor="middle" font-size="18" fill="white">3</text>
+      <text x="130" y="20" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1e293b">Docker Run Command</text>
+      <g font-family="monospace" font-size="8" fill="#475569">
+        <text x="130" y="38" text-anchor="middle">docker run --rm --network=none</text>
+        <text x="130" y="50" text-anchor="middle">--memory=256m --cpus=1</text>
+        <text x="130" y="62" text-anchor="middle">-v temp:/app:ro image</text>
+        <text x="130" y="74" text-anchor="middle">sh -c "compile && run"</text>
+      </g>
+    </g>
+
+    <!-- Arrow 3->4 -->
+    <path id="arrow-d3-4" d="M130,270 L130,290" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.6"/>
+    <circle cx="130" cy="270" r="4" fill="#a855f7"><animateMotion dur="1.5s" repeatCount="indefinite" rotate="auto" begin="2.8s"><mpath href="#arrow-d3-4"/></animateMotion></circle>
+
+    <!-- Step 4: Execute Code -->
+    <g class="node-group docker-step" id="docker-step4" transform="translate(0, 290)">
+      <rect x="0" y="0" width="260" height="80" rx="10" fill="white" stroke="#a855f7" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="2s" repeatCount="indefinite" begin="2.9s"/>
+      </rect>
+      <circle cx="25" cy="35" r="16" fill="url(#nodeGradPurple)"><animate attributeName="r" values="16;18;16" dur="1s" repeatCount="indefinite" begin="2.9s"/></circle>
+      <text x="25" y="39" text-anchor="middle" font-size="18" fill="white">4</text>
+      <text x="130" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1e293b">Execute Code in Container</text>
+      <text x="130" y="45" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">g++ / javac / node + run</text>
+      <text x="130" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">10s timeout • stdout + stderr</text>
+    </g>
+
+    <!-- Arrow 4->5 -->
+    <path id="arrow-d4-5" d="M130,370 L130,390" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.6"/>
+    <circle cx="130" cy="370" r="4" fill="#a855f7"><animateMotion dur="1.5s" repeatCount="indefinite" rotate="auto" begin="3.1s"><mpath href="#arrow-d4-5"/></animateMotion></circle>
+
+    <!-- Step 5: Parse Output + Metrics -->
+    <g class="node-group docker-step" id="docker-step5" transform="translate(0, 390)">
+      <rect x="0" y="0" width="260" height="85" rx="10" fill="white" stroke="#a855f7" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="2s" repeatCount="indefinite" begin="3.2s"/>
+      </rect>
+      <circle cx="25" cy="35" r="16" fill="url(#nodeGradPurple)"><animate attributeName="r" values="16;18;16" dur="1s" repeatCount="indefinite" begin="3.2s"/></circle>
+      <text x="25" y="39" text-anchor="middle" font-size="18" fill="white">5</text>
+      <text x="130" y="22" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1e293b">Parse Output + Metrics</text>
+      <g font-family="system-ui, sans-serif" font-size="9" fill="#475569">
+        <text x="130" y="38" text-anchor="middle">Runtime: process.hrtime.bigint() → seconds</text>
+        <text x="130" y="50" text-anchor="middle">Memory: cgroups v2 /sys/fs/cgroup/memory.current</text>
+        <text x="130" y="62" text-anchor="middle">Peak bytes → KB • Extract __MEM_PEAK__</text>
+      </g>
+    </g>
+
+    <!-- Arrow 5->6 -->
+    <path id="arrow-d5-6" d="M130,475 L130,495" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.6"/>
+    <circle cx="130" cy="475" r="4" fill="#a855f7"><animateMotion dur="1.5s" repeatCount="indefinite" rotate="auto" begin="3.4s"><mpath href="#arrow-d5-6"/></animateMotion></circle>
+
+    <!-- Step 6: Cleanup & Return -->
+    <g class="node-group docker-step" id="docker-step6" transform="translate(0, 495)">
+      <rect x="0" y="0" width="260" height="75" rx="10" fill="white" stroke="#a855f7" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="2s" repeatCount="indefinite" begin="3.5s"/>
+      </rect>
+      <circle cx="25" cy="35" r="16" fill="url(#nodeGradPurple)"><animate attributeName="r" values="16;18;16" dur="1s" repeatCount="indefinite" begin="3.5s"/></circle>
+      <text x="25" y="39" text-anchor="middle" font-size="18" fill="white">6</text>
+      <text x="130" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1e293b">Cleanup & Return Result</text>
+      <text x="130" y="45" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">fs.rmSync(tempDir) • --rm auto-removes container</text>
+      <text x="130" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">{status, output, stderr, runtime, memory}</text>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       SECURITY MODEL (Bottom section)
+       ============================================================ -->
+  <g id="layer-security" transform="translate(150, 580)">
+    <text x="500" y="0" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#1e293b">Docker Sandbox Security Model</text>
+
+    <!-- Host System -->
+    <g class="security-box" transform="translate(0, 30)">
+      <rect x="0" y="0" width="300" height="180" rx="12" fill="white" stroke="#3b82f6" stroke-width="2" stroke-dasharray="8,4" filter="url(#shadow)"/>
+      <text x="150" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#3b82f6">Host System</text>
+      <rect x="30" y="45" width="240" height="55" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+      <text x="150" y="70" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" font-weight="500" fill="#1e40af">Temp Directory</text>
+      <text x="150" y="88" text-anchor="middle" font-family="monospace" font-size="9" fill="#3b82f6">job_1786569637273_4a3514a6/</text>
+      <text x="150" y="102" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#64748b">solution.cpp • input.txt</text>
+      <!-- Read-only mount arrow -->
+      <path id="arrow-mount" d="M280,85 Q330,85 330,120" stroke="#f97316" stroke-width="3" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="5,5"/>
+      <circle r="5" fill="#f97316"><animateMotion dur="2s" repeatCount="indefinite" rotate="auto"><mpath href="#arrow-mount"/></animateMotion></circle>
+      <text x="300" y="100" text-anchor="start" font-family="system-ui, sans-serif" font-size="9" fill="#f97316" font-weight="500">Read-Only Mount (:ro)</text>
+    </g>
+
+    <!-- Container Isolation -->
+    <g class="security-box" transform="translate(350, 30)">
+      <rect x="0" y="0" width="300" height="180" rx="12" fill="white" stroke="#a855f7" stroke-width="2" filter="url(#shadow)">
+        <animate attributeName="stroke-width" values="2;3;2" dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <text x="150" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#a855f7">Container Isolation</text>
+      <g font-family="system-ui, sans-serif" font-size="10" fill="#334155">
+        <circle cx="30" cy="55" r="6" fill="#22c55e"/><text x="45" y="58">--network=none</text><text x="180" y="58" font-size="9" fill="#64748b">No network access</text>
+        <circle cx="30" cy="75" r="6" fill="#22c55e"/><text x="45" y="78">--memory=256m</text><text x="180" y="78" font-size="9" fill="#64748b">RAM limit</text>
+        <circle cx="30" cy="95" r="6" fill="#22c55e"/><text x="45" y="98">--cpus=1</text><text x="180" y="98" font-size="9" fill="#64748b">CPU limit</text>
+        <circle cx="30" cy="115" r="6" fill="#22c55e"/><text x="45" y="118">--pids-limit=100</text><text x="180" y="118" font-size="9" fill="#64748b">Process limit</text>
+        <circle cx="30" cy="135" r="6" fill="#22c55e"/><text x="45" y="138">--rm</text><text x="180" y="138" font-size="9" fill="#64748b">Auto cleanup</text>
+        <circle cx="30" cy="155" r="6" fill="#f97316"/><text x="45" y="158">10s timeout</text><text x="180" y="158" font-size="9" fill="#64748b">Hard execution limit</text>
+      </g>
+    </g>
+
+    <!-- Metrics Collection -->
+    <g class="security-box" transform="translate(700, 30)">
+      <rect x="0" y="0" width="300" height="180" rx="12" fill="white" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+      <text x="150" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#22c55e">Metrics Collection</text>
+      <g font-family="system-ui, sans-serif" font-size="10" fill="#334155">
+        <circle cx="30" cy="55" r="6" fill="#3b82f6"/><text x="45" y="58">cgroups v2</text>
+        <text x="150" y="58" font-size="9" fill="#64748b">/sys/fs/cgroup/memory.current</text>
+        <circle cx="30" cy="80" r="6" fill="#3b82f6"/><text x="45" y="83">Peak RAM Bytes</text>
+        <text x="150" y="83" font-size="9" fill="#64748b">Parsed from __MEM_PEAK__:bytes</text>
+        <circle cx="30" cy="105" r="6" fill="#3b82f6"/><text x="45" y="108">Convert to KB</text>
+        <text x="150" y="108" font-size="9" fill="#64748b">Math.round(bytes / 1024)</text>
+        <circle cx="30" cy="130" r="6" fill="#3b82f6"/><text x="45" y="133">High-Res Time</text>
+        <text x="150" y="133" font-size="9" fill="#64748b">process.hrtime.bigint()</text>
+        <circle cx="30" cy="155" r="6" fill="#3b82f6"/><text x="45" y="158">Wall Clock</text>
+        <text x="150" y="158" font-size="9" fill="#64748b">Runtime in seconds (3 decimals)</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       RESPONSE FORMATS (Bottom right)
+       ============================================================ -->
+  <g id="layer-responses" transform="translate(150, 780)">
+    <text x="0" y="0" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#1e293b">API Response Formats</text>
+
+    <!-- Single Response -->
+    <g transform="translate(0, 20)">
+      <rect x="0" y="0" width="320" height="100" rx="8" fill="#1e293b" stroke="#334155"/>
+      <text x="10" y="20" font-family="monospace" font-size="10" fill="#22c55e">Single Execution Response</text>
+      <text x="10" y="38" font-family="monospace" font-size="9" fill="#94a3b8">{</text>
+      <text x="20" y="52" font-family="monospace" font-size="9" fill="#a5b4fc">"status": "success|error|tle",</text>
+      <text x="20" y="64" font-family="monospace" font-size="9" fill="#a5b4fc">"output": "program stdout",</text>
+      <text x="20" y="76" font-family="monospace" font-size="9" fill="#a5b4fc">"stderr": "compilation errors",</text>
+      <text x="20" y="88" font-family="monospace" font-size="9" fill="#a5b4fc">"runtime": 0.001,</text>
+      <text x="20" y="100" font-family="monospace" font-size="9" fill="#a5b4fc">"memory": 1024</text>
+      <text x="10" y="114" font-family="monospace" font-size="9" fill="#94a3b8">}</text>
+    </g>
+
+    <!-- Batch/Problem Response -->
+    <g transform="translate(350, 20)">
+      <rect x="0" y="0" width="320" height="100" rx="8" fill="#1e293b" stroke="#334155"/>
+      <text x="10" y="20" font-family="monospace" font-size="10" fill="#f97316">Batch/Problem Response</text>
+      <text x="10" y="38" font-family="monospace" font-size="9" fill="#94a3b8">{</text>
+      <text x="20" y="52" font-family="monospace" font-size="9" fill="#fdba74">"status": "accepted|wrong|error|tle",</text>
+      <text x="20" y="64" font-family="monospace" font-size="9" fill="#fdba74">"testCasesPassed": 3,</text>
+      <text x="20" y="76" font-family="monospace" font-size="9" fill="#fdba74">"testCasesTotal": 5,</text>
+      <text x="20" y="88" font-family="monospace" font-size="9" fill="#fdba74">"runtime": 0.045,</text>
+      <text x="20" y="100" font-family="monospace" font-size="9" fill="#fdba74">"memory": 2048,</text>
+      <text x="10" y="114" font-family="monospace" font-size="9" fill="#94a3b8">"results": [ {testCase...} ]</text>
+      <text x="10" y="126" font-family="monospace" font-size="9" fill="#94a3b8">}</text>
+    </g>
+
+    <!-- Language Support -->
+    <g transform="translate(700, 20)">
+      <rect x="0" y="0" width="300" height="100" rx="8" fill="#1e293b" stroke="#334155"/>
+      <text x="10" y="20" font-family="monospace" font-size="10" fill="#a855f7">Supported Languages</text>
+      <g font-family="system-ui, sans-serif" font-size="10" fill="#e2e8f0">
+        <circle cx="15" cy="40" r="6" fill="#3b82f6"/><text x="30" y="43">C++ (gcc:latest)</text>
+        <circle cx="15" cy="58" r="6" fill="#f97316"/><text x="30" y="61">Java (eclipse-temurin:17)</text>
+        <circle cx="15" cy="76" r="6" fill="#22c55e"/><text x="30" y="79">JavaScript (node:20-alpine)</text>
+        <text x="15" y="95" font-size="9" fill="#64748b">Auto-detects Java public class name</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================
+       CONNECTING ARROWS BETWEEN MAIN LAYERS
+       ============================================================ -->
+  <!-- Services -> Docker Step 1 -->
+  <path id="arrow-svc-docker" d="M1070,200 Q1100,200 1100,120 Q1120,100 1150,100" stroke="#f97316" stroke-width="3" fill="none" marker-end="url(#arrowhead)" opacity="0.7">
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="2s" repeatCount="indefinite"/>
+  </path>
+  <circle r="6" fill="#f97316" filter="url(#pulseGlow)">
+    <animateMotion dur="2s" repeatCount="indefinite" rotate="auto" begin="1.8s">
+      <mpath href="#arrow-svc-docker"/>
+    </animateMotion>
+  </circle>
+
+  <!-- Return arrow from Docker back to services -->
+  <path id="arrow-docker-return" d="M1120,200 Q1080,200 1080,300 Q1050,350 1000,350" stroke="#22c55e" stroke-width="3" fill="none" marker-end="url(#arrowhead)" opacity="0.7" stroke-dasharray="10,5">
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" repeatCount="indefinite"/>
+  </path>
+  <circle r="5" fill="#22c55e" filter="url(#pulseGlow)">
+    <animateMotion dur="3s" repeatCount="indefinite" rotate="auto" begin="4s">
+      <mpath href="#arrow-docker-return"/>
+    </animateMotion>
+  </circle>
+
+  <!-- Return to Client -->
+  <path id="arrow-return-client" d="M450,180 Q350,180 350,130" stroke="#22c55e" stroke-width="3" fill="none" marker-end="url(#arrowhead)" opacity="0.7" stroke-dasharray="10,5"/>
+  <circle r="5" fill="#22c55e" filter="url(#pulseGlow)">
+    <animateMotion dur="2.5s" repeatCount="indefinite" rotate="auto" begin="4.5s">
+      <mpath href="#arrow-return-client"/>
+    </animateMotion>
+  </circle>
+
+  <!-- ============================================================
+       CSS ANIMATIONS (via style element)
+       ============================================================ -->
+  <style><![CDATA[
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .node-group {
+      animation: fadeInUp 0.6s ease-out forwards;
+      opacity: 0;
+    }
+    .node-group:nth-child(1) { animation-delay: 0.1s; }
+    .node-group:nth-child(2) { animation-delay: 0.2s; }
+    .node-group:nth-child(3) { animation-delay: 0.3s; }
+    .node-group:nth-child(4) { animation-delay: 0.4s; }
+    .node-group:nth-child(5) { animation-delay: 0.5s; }
+    .node-group:nth-child(6) { animation-delay: 0.6s; }
+
+    .service-node {
+      animation: slideIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    #svc-single { animation-delay: 1.2s; }
+    #svc-batch { animation-delay: 1.4s; }
+    #svc-problem { animation-delay: 1.6s; }
+
+    .docker-step {
+      animation: fadeInUp 0.4s ease-out forwards;
+      opacity: 0;
+    }
+    #docker-step1 { animation-delay: 2.0s; }
+    #docker-step2 { animation-delay: 2.2s; }
+    #docker-step3 { animation-delay: 2.4s; }
+    #docker-step4 { animation-delay: 2.6s; }
+    #docker-step5 { animation-delay: 2.8s; }
+    #docker-step6 { animation-delay: 3.0s; }
+
+    .security-box {
+      animation: fadeInUp 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    .security-box:nth-child(1) { animation-delay: 3.2s; }
+    .security-box:nth-child(2) { animation-delay: 3.4s; }
+    .security-box:nth-child(3) { animation-delay: 3.6s; }
+
+    .flow-arrow {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Hover interactions */
+    .node-group:hover, .service-node:hover, .docker-step:hover, .security-box:hover {
+      filter: url(#glow) !important;
+      transform: translateY(-2px);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .node-group:hover rect, .service-node:hover rect, .docker-step:hover rect {
+      stroke-width: 3 !important;
+    }
+  ]]></style>
+
+  <!-- ============================================================
+       JAVASCRIPT FOR INTERACTIVITY
+       ============================================================ -->
+  <script><![CDATA[
+    // Initialize all animations
+    document.addEventListener('DOMContentLoaded', function() {
+      // Force reflow to trigger CSS animations
+      document.querySelectorAll('.node-group, .service-node, .docker-step, .security-box').forEach(function(el, i) {
+        el.style.animationPlayState = 'running';
+      });
+    });
+
+    // Hover highlight connected elements
+    const connections = {
+      'layer-client': ['layer-compiler'],
+      'layer-compiler': ['layer-services', 'layer-docker'],
+      'layer-services': ['layer-docker'],
+      'layer-docker': ['layer-compiler', 'layer-client']
+    };
+
+    document.querySelectorAll('[id^="layer-"]').forEach(function(layer) {
+      layer.addEventListener('mouseenter', function() {
+        const connected = connections[this.id] || [];
+        connected.forEach(function(id) {
+          const el = document.getElementById(id);
+          if (el) el.style.filter = 'url(#glow)';
+        });
+      });
+      layer.addEventListener('mouseleave', function() {
+        const connected = connections[this.id] || [];
+        connected.forEach(function(id) {
+          const el = document.getElementById(id);
+          if (el) el.style.filter = '';
+        });
+      });
+    });
+
+    // Click to focus on a section
+    document.querySelectorAll('.docker-step').forEach(function(step, i) {
+      step.style.cursor = 'pointer';
+      step.addEventListener('click', function() {
+        // Pulse the clicked step
+        this.querySelector('rect').animate([
+          { strokeWidth: 2 },
+          { strokeWidth: 5 },
+          { strokeWidth: 2 }
+        ], { duration: 600, easing: 'ease-out' });
+
+        // Show tooltip
+        showTooltip(this, i + 1);
+      });
+    });
+
+    function showTooltip(element, stepNum) {
+      const existing = document.getElementById('step-tooltip');
+      if (existing) existing.remove();
+
+      const tooltip = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      tooltip.id = 'step-tooltip';
+      tooltip.innerHTML = `
+        <rect x="0" y="0" width="200" height="60" rx="8" fill="#1e293b" filter="url(#shadow)"/>
+        <text x="100" y="22" text-anchor="middle" font-family="system-ui" font-size="12" font-weight="600" fill="white">Step ${stepNum}</text>
+        <text x="100" y="42" text-anchor="middle" font-family="system-ui" font-size="10" fill="#94a3b8">Click again to dismiss</text>
+      `;
+      const bbox = element.getBBox();
+      tooltip.setAttribute('transform', `translate(${bbox.x + bbox.width/2 - 100}, ${bbox.y - 70})`);
+      element.parentNode.appendChild(tooltip);
+
+      setTimeout(() => tooltip.remove(), 3000);
+      tooltip.addEventListener('click', () => tooltip.remove());
+    }
+  ]]></script>
+</svg>

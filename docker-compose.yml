@@ -1,0 +1,34 @@
+services:
+  custom-compiler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: custom-compiler:latest
+    container_name: custom_compiler_service
+    ports:
+      - "5001:5001"
+    volumes:
+      # WARNING: Mounting docker.sock gives full host access - use with extreme caution
+      # In production, use a dedicated execution agent (gVisor, kata-containers, or separate VM)
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Shared temporary directory for code execution files
+      - ./temp:/app/temp
+    environment:
+      - PORT=5001
+      - COMPILER_API_KEY=codenexus-compiler-secret-key
+      - ALLOWED_BACKEND_URL=http://localhost:4000
+      - CPU_LIMIT=1
+      - MEMORY_LIMIT=256m
+      - PIDS_LIMIT=100
+      - STORAGE_LIMIT=10m
+      - EXECUTION_TIMEOUT=10000
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE

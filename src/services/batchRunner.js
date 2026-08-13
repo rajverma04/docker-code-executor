@@ -26,7 +26,7 @@ function normalizeOutput(str) {
  *   results: Array<object>
  * }>}
  */
-const executeBatchCode = async (code, language, testCases = [], timeoutMs = 10000) => {
+const executeBatchCode = async (code, language, testCases = [], timeoutMs = 10000, stopOnFirstFailure = true) => {
   let testCasesPassed = 0;
   let totalRuntime = 0;
   let peakMemory = 0;
@@ -56,14 +56,32 @@ const executeBatchCode = async (code, language, testCases = [], timeoutMs = 1000
     const actualOutput = normalizeOutput(runResult.output);
     const expectedOutput = normalizeOutput(testCase.output);
 
-    // Exact output match validation
     const isMatch = (runResult.status === 'success') && (expectedOutput !== '') && (actualOutput === expectedOutput);
     const displayOutput = actualOutput || runResult.stderr || (runResult.status === 'tle' ? 'Time Limit Exceeded' : '');
 
+    let testStatus;
+    let statusId;
+    if (isMatch) {
+      testStatus = 'passed';
+      statusId = 3;
+    } else if (runResult.status === 'tle') {
+      testStatus = 'tle';
+      statusId = 5;
+    } else if (runResult.status === 'compilation_error') {
+      testStatus = 'compilation_error';
+      statusId = 6;
+    } else if (runResult.status === 'error') {
+      testStatus = 'error';
+      statusId = 4;
+    } else {
+      testStatus = 'wrong';
+      statusId = 4;
+    }
+
     results.push({
       testCaseNumber: i + 1,
-      status: isMatch ? 'passed' : (runResult.status === 'tle' ? 'tle' : (runResult.status === 'error' ? 'error' : 'wrong')),
-      status_id: isMatch ? 3 : 4, // 3 = Passed, 4 = Failed/Error (Judge0 compatibility)
+      status: testStatus,
+      status_id: statusId,
       input: testCase.input,
       stdin: testCase.input,
       actualOutput: displayOutput,
@@ -78,18 +96,24 @@ const executeBatchCode = async (code, language, testCases = [], timeoutMs = 1000
     if (isMatch) {
       testCasesPassed++;
     } else {
-      // Record first failing test case reason
       if (finalStatus === 'accepted') {
         if (runResult.status === 'tle') {
           finalStatus = 'tle';
           firstErrorMessage = `Time Limit Exceeded on Test Case #${i + 1}`;
+        } else if (runResult.status === 'compilation_error') {
+          finalStatus = 'compilation_error';
+          firstErrorMessage = runResult.stderr || `Compilation Error on Test Case #${i + 1}`;
         } else if (runResult.status === 'error') {
           finalStatus = 'error';
-          firstErrorMessage = runResult.stderr || `Compilation / Runtime Error on Test Case #${i + 1}`;
+          firstErrorMessage = runResult.stderr || `Runtime Error on Test Case #${i + 1}`;
         } else {
           finalStatus = 'wrong';
           firstErrorMessage = `Wrong Answer on Test Case #${i + 1}. Expected: '${expectedOutput}', Got: '${displayOutput}'`;
         }
+      }
+
+      if (stopOnFirstFailure) {
+        break;
       }
     }
   }
@@ -98,8 +122,8 @@ const executeBatchCode = async (code, language, testCases = [], timeoutMs = 1000
     status: finalStatus,
     testCasesPassed,
     testCasesTotal: testCases.length,
-    runtime: Number(totalRuntime.toFixed(3)), // Clean 3 decimal places (e.g. 0.009s)
-    memory: peakMemory,                              // Exact Peak Memory in KB
+    runtime: Number(totalRuntime.toFixed(3)),
+    memory: peakMemory,
     errorMessage: firstErrorMessage,
     results
   };
@@ -149,7 +173,7 @@ const evaluateProblemSubmission = async (userCode, userLanguage, problem, isRunO
     });
   }
 
-  return await executeBatchCode(userCode, userLanguage, preparedTestCases);
+  return await executeBatchCode(userCode, userLanguage, preparedTestCases, 10000, true);
 };
 
 module.exports = { executeBatchCode, evaluateProblemSubmission, normalizeOutput };

@@ -1,15 +1,50 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { executeSingleCode, executeBatchCode, evaluateProblemSubmission } = require('./index');
+const crypto = require('crypto');
+const authMiddleware = require('./src/middleware/auth');
+const router = require('./src/routes/executer');
 
 const app = express();
+let server;
 
 const allowedOrigins = [
   'http://localhost:4000',
   (process.env.ALLOWED_BACKEND_URL || '').trim()
 ].filter(Boolean);
 
+function log(level, message, meta = {}) {
+  const timestamp = new Date().toISOString();
+  console.log(JSON.stringify({ timestamp, level, message, ...meta }));
+}
+
+function requestLogger(req, res, next) {
+  const start = process.hrtime.bigint();
+  const requestId = crypto.randomUUID();
+  req.requestId = requestId;
+
+  log('info', 'Request started', {
+    requestId,
+    method: req.method,
+    path: req.path,
+    ip: req.ip
+  });
+
+  res.on('finish', () => {
+    const end = process.hrtime.bigint();
+    const durationMs = Number(end - start) / 1e6;
+    log('info', 'Request completed', {
+      requestId,
+      method: req.method,
+      path: req.path,
+      statusCode: res.statusCode,
+      durationMs: durationMs.toFixed(2)
+    });
+  });
+
+  next();
+}
+app.use(requestLogger);
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
@@ -19,68 +54,57 @@ app.use(cors({
     }
   }
 }));
+
 app.use(express.json({ limit: '10mb' }));
 
-const API_SECRET = process.env.COMPILER_API_KEY || 'codenexus-compiler-secret-key';
+// Authentication Middleware
+app.use(authMiddleware);
 
-// Authentication Middleware for Compiler Service
-app.use((req, res, next) => {
-  // Allow health check without API key
-  if (req.path === '/health' || req.path === '/') {
-    return next();
-  }
+// API Routes
+app.use('/', router);
 
-  const apiKey = req.headers['x-api-key'];
-  if (apiKey !== API_SECRET) {
-    return res.status(401).json({ error: 'Unauthorized access to Custom Compiler Microservice' });
-  }
-  next();
-});
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'active',
-    service: 'custom-docker-compiler',
-    uptime: process.uptime(),
-    timestamp: new Date()
+// Global error handler
+app.use((err, req, res, next) => {
+  log('error', 'Unhandled error', {
+    requestId: req.requestId,
+    error: err.message,
+    stack: err.stack
   });
-});
-
-// Single execution endpoint
-app.post('/execute/single', async (req, res) => {
-  try {
-    const { code, input, language, timeoutMs } = req.body;
-    const result = await executeSingleCode(code, input, language, timeoutMs);
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Batch testcases execution endpoint
-app.post('/execute/batch', async (req, res) => {
-  try {
-    const { code, language, testCases, timeoutMs } = req.body;
-    const result = await executeBatchCode(code, language, testCases, timeoutMs);
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Full Problem evaluation endpoint
-app.post('/execute/problem', async (req, res) => {
-  try {
-    const { userCode, userLanguage, problem, isRunOnly } = req.body;
-    const result = await evaluateProblemSubmission(userCode, userLanguage, problem, isRunOnly);
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  res.status(500).json({ error: 'Internal server error' });
 });
 
 const PORT = Number(process.env.PORT) || 5001;
-app.listen(PORT, () => {
-  console.log(`🚀 Custom Docker Compiler Microservice running at http://localhost:${PORT}`);
+
+function gracefulShutdown(signal) {
+  log('info', `Received ${signal}, starting graceful shutdown`);
+  
+  if (server) {
+    server.close((err) => {
+      if (err) {
+        log('error', 'Error during server close', { error: err.message });
+        process.exit(1);
+      }
+      log('info', 'Server closed, exiting');
+      process.exit(0);
+    });
+
+    setTimeout(() => {
+      log('error', 'Forced shutdown after timeout');
+      process.exit(1);
+    }, 10000);
+  } else {
+    process.exit(0);
+  }
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+server = app.listen(PORT, () => {
+  log('info', `Custom Docker Compiler Microservice running`, { port: PORT });
 });
+server.timeout = 120000;
+server.headersTimeout = 120000;
+server.keepAliveTimeout = 120000;
+
+

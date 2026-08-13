@@ -3,34 +3,40 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+const CPU_LIMIT = process.env.CPU_LIMIT || '1';
+const MEMORY_LIMIT = process.env.MEMORY_LIMIT || '256m';
+const PIDS_LIMIT = process.env.PIDS_LIMIT || '100';
+
+const MEM_PEAK_CMD = 'echo __MEM_PEAK__:\\$(cat /sys/fs/cgroup/memory.current 2>/dev/null || cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes 2>/dev/null || echo 0)';
+
 /**
- * Supported Language Configurations with exact Linux cgroups RAM memory tracking
+ * Supported Language Configurations with cgroups RAM memory tracking
  */
 const LANGUAGE_CONFIGS = {
   'cpp': {
     fileName: 'solution.cpp',
     dockerImage: 'gcc:latest',
-    compileAndRun: 'g++ -O2 /app/solution.cpp -o /tmp/a.out && /tmp/a.out < /app/input.txt && echo __MEM_PEAK__:\\$(cat /sys/fs/cgroup/memory.current)'
+    compileAndRun: `g++ -O2 /app/solution.cpp -o /tmp/a.out && /tmp/a.out < /app/input.txt && ${MEM_PEAK_CMD}`
   },
   'c++': {
     fileName: 'solution.cpp',
     dockerImage: 'gcc:latest',
-    compileAndRun: 'g++ -O2 /app/solution.cpp -o /tmp/a.out && /tmp/a.out < /app/input.txt && echo __MEM_PEAK__:\\$(cat /sys/fs/cgroup/memory.current)'
+    compileAndRun: `g++ -O2 /app/solution.cpp -o /tmp/a.out && /tmp/a.out < /app/input.txt && ${MEM_PEAK_CMD}`
   },
   'java': {
     fileName: 'Solution.java',
     dockerImage: 'eclipse-temurin:17',
-    compileAndRun: 'javac /app/Solution.java -d /tmp && java -cp /tmp Solution < /app/input.txt && echo __MEM_PEAK__:\\$(cat /sys/fs/cgroup/memory.current)'
+    compileAndRun: `javac /app/Solution.java -d /tmp && java -cp /tmp Solution < /app/input.txt && ${MEM_PEAK_CMD}`
   },
   'javascript': {
     fileName: 'solution.js',
     dockerImage: 'node:20-alpine',
-    compileAndRun: 'node /app/solution.js < /app/input.txt && echo __MEM_PEAK__:\\$(cat /sys/fs/cgroup/memory.current)'
+    compileAndRun: `node /app/solution.js < /app/input.txt && ${MEM_PEAK_CMD}`
   },
   'js': {
     fileName: 'solution.js',
     dockerImage: 'node:20-alpine',
-    compileAndRun: 'node /app/solution.js < /app/input.txt && echo __MEM_PEAK__:\\$(cat /sys/fs/cgroup/memory.current)'
+    compileAndRun: `node /app/solution.js < /app/input.txt && ${MEM_PEAK_CMD}`
   }
 };
 
@@ -59,9 +65,8 @@ const executeSingleCode = (code, input = '', language = 'javascript', timeoutMs 
       });
     }
 
-    // 1. Create a unique isolated temporary directory for this execution
     const jobId = `job_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
-    const tempDir = path.join(__dirname, 'temp', jobId);
+    const tempDir = path.resolve(process.cwd(), 'temp', jobId);
 
     try {
       fs.mkdirSync(tempDir, { recursive: true });
@@ -74,41 +79,38 @@ const executeSingleCode = (code, input = '', language = 'javascript', timeoutMs 
         const match = (code || '').match(/public\s+class\s+([A-Za-z0-9_]+)/);
         const className = match ? match[1] : 'Solution';
         fileName = `${className}.java`;
-        compileAndRun = `javac /app/${className}.java -d /tmp && java -cp /tmp ${className} < /app/input.txt && echo __MEM_PEAK__:\\$(cat /sys/fs/cgroup/memory.current)`;
+        compileAndRun = `javac /app/${className}.java -d /tmp && java -cp /tmp ${className} < /app/input.txt && ${MEM_PEAK_CMD}`;
       }
 
-      // 2. Write code and input text files
       const codeFilePath = path.join(tempDir, fileName);
       const inputFilePath = path.join(tempDir, 'input.txt');
 
       fs.writeFileSync(codeFilePath, code || '');
       fs.writeFileSync(inputFilePath, input || '');
 
-      // 3. Construct Docker Sandboxed Execution Command
       const dockerCmd = `docker run --rm \
         --network=none \
-        --memory=256m \
+        --memory=${MEMORY_LIMIT} \
+        --cpus=${CPU_LIMIT} \
+        --pids-limit=${PIDS_LIMIT} \
         -v "${tempDir}:/app:ro" \
         ${config.dockerImage} \
         sh -c "${compileAndRun}"`;
 
       const startTime = process.hrtime.bigint();
 
-      // 4. Spawn container execution
       exec(dockerCmd, { timeout: timeoutMs, maxBuffer: 10 * 1024 * 1024 }, (error, stdout, stderr) => {
         const endTime = process.hrtime.bigint();
         const wallClockRuntimeMs = Number(endTime - startTime) / 1e6;
         const exactRuntimeSec = Number((wallClockRuntimeMs / 1000).toFixed(3));
 
-        // Cleanup temporary directory safely
         try {
           fs.rmSync(tempDir, { recursive: true, force: true });
         } catch (cleanupErr) {}
 
-        // Handle Execution Timeouts
         if (error && (error.killed || error.signal === 'SIGTERM')) {
           return resolve({
-            status: 'tle', // Time Limit Exceeded
+            status: 'tle',
             output: '',
             stderr: 'Time Limit Exceeded (Execution exceeded limit)',
             runtime: timeoutMs / 1000,
@@ -120,16 +122,13 @@ const executeSingleCode = (code, input = '', language = 'javascript', timeoutMs 
         const rawStderr = stderr || '';
         const combined = rawStdout + '\n' + rawStderr;
 
-        // Parse exact peak RAM memory (KB) from cgroups memory.current inside container
         const memMatch = combined.match(/__MEM_PEAK__:(\d+)/);
         const peakBytes = memMatch ? parseInt(memMatch[1], 10) : 0;
         const exactMemoryKb = Math.round(peakBytes / 1024);
 
-        // Clean internal __MEM_PEAK__ marker from user stdout & stderr
         const cleanOutput = rawStdout.replace(/__MEM_PEAK__:\d+/g, '').trim();
         const cleanStderr = rawStderr.replace(/__MEM_PEAK__:\d+/g, '').trim();
 
-        // Handle Compilation or Runtime Errors
         if (error && !cleanOutput) {
           return resolve({
             status: 'error',
@@ -140,7 +139,6 @@ const executeSingleCode = (code, input = '', language = 'javascript', timeoutMs 
           });
         }
 
-        // Execution Success
         resolve({
           status: 'success',
           output: cleanOutput,
