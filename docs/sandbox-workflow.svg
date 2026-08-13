@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080" width="1920" height="1080">
   <defs>
     <!-- Gradients -->
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -258,47 +258,47 @@
        ============================================================ -->
   <!-- Path: Client -> Auth -->
   <path id="pathClientAuth" d="M460,540 Q610,540 610,480 Q610,420 710,420" fill="none" stroke="url(#flowBlue)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadBlue)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite"/>
   </path>
   <!-- Path: Auth -> Route -->
   <path id="pathAuthRoute" d="M860,420 Q935,420 935,480 Q935,540 1010,540" fill="none" stroke="url(#flowPurple)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadPurple)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="0.5s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="0.5s"/>
   </path>
   <!-- Path: Route -> Controller -->
   <path id="pathRouteController" d="M1160,540 Q1235,540 1235,480 Q1235,420 1310,420" fill="none" stroke="url(#flowOrange)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadOrange)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="1s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="1s"/>
   </path>
   <!-- Path: Controller -> Sandbox -->
   <path id="pathControllerSandbox" d="M1460,420 Q1535,420 1535,480 Q1535,540 1610,540" fill="none" stroke="url(#flowYellow)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadYellow)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="1.5s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="1.5s"/>
   </path>
   <!-- Path: Sandbox -> Docker (down) -->
   <path id="pathSandboxDocker" d="M1745,600 Q1745,670 1745,720" fill="none" stroke="url(#flowCyan)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadCyan)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="2s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="2s"/>
   </path>
   <!-- Path: Docker -> Execution (inside container visualization) -->
   <path id="pathDockerExecution" d="M1745,830 Q1745,880 1745,920" fill="none" stroke="url(#flowGreen)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadGreen)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="2.5s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="2.5s"/>
   </path>
   <!-- Path: Execution -> Metrics (left) -->
   <path id="pathExecutionMetrics" d="M1610,960 Q1460,960 1460,860 Q1460,760 1310,760" fill="none" stroke="url(#flowGreen)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadGreen)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="3s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="3s"/>
   </path>
   <!-- Path: Metrics -> Cleanup -->
   <path id="pathMetricsCleanup" d="M1160,760 Q1085,760 1085,820 Q1085,880 1010,880" fill="none" stroke="url(#flowRed)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadRed)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="3.5s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="3.5s"/>
   </path>
   <!-- Path: Cleanup -> Route (return) -->
   <path id="pathCleanupRoute" d="M860,880 Q785,880 785,820 Q785,760 710,760" fill="none" stroke="url(#flowBlue)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadBlue)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="4s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="4s"/>
   </path>
   <!-- Path: Route -> Auth (return) -->
   <path id="pathRouteAuth" d="M560,760 Q485,760 485,700 Q485,640 560,640" fill="none" stroke="url(#flowBlue)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadBlue)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="4.5s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="4.5s"/>
   </path>
   <!-- Path: Auth -> Client (return) -->
   <path id="pathAuthClient" d="M460,640 Q385,640 385,580 Q385,520 310,520" fill="none" stroke="url(#flowBlue)" stroke-width="2" stroke-dasharray="8,6" opacity="0.5" marker-end="url(#arrowHeadBlue)">
-    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" linear repeatCount="indefinite" begin="5s"/>
+    <animate attributeName="stroke-dashoffset" values="0;-200" dur="3s" calcMode="linear" repeatCount="indefinite" begin="5s"/>
   </path>
 
   <!-- ============================================================
@@ -308,7 +308,7 @@
   <!-- CARD 1: CLIENT -->
   <g id="cardClient" class="component-card" transform="translate(80, 420)">
     <rect x="0" y="0" width="280" height="220" rx="16" fill="url(#cardGradBlue)" stroke="url(#glowBlue)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" ease-in-out repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite"/>
       <animate attributeName="filter" values="url(#dropShadow);url(#glowStrong);url(#dropShadow)" dur="4s" repeatCount="indefinite"/>
     </rect>
     <!-- Inner glow top border -->
@@ -354,7 +354,7 @@
   <!-- CARD 2: AUTH MIDDLEWARE -->
   <g id="cardAuth" class="component-card" transform="translate(560, 300)">
     <rect x="0" y="0" width="280" height="220" rx="16" fill="url(#cardGradPurple)" stroke="url(#glowPurple)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" ease-in-out repeatCount="indefinite" begin="0.5s"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite" begin="0.5s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#b85cff" stroke-width="1" opacity="0.3"/>
 
@@ -397,7 +397,7 @@
   <!-- CARD 3: ROUTE -->
   <g id="cardRoute" class="component-card" transform="translate(860, 420)">
     <rect x="0" y="0" width="280" height="220" rx="16" fill="url(#cardGradOrange)" stroke="url(#glowOrange)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" ease-in-out repeatCount="indefinite" begin="1s"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite" begin="1s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#ffb800" stroke-width="1" opacity="0.3"/>
 
@@ -435,7 +435,7 @@
   <!-- CARD 4: CONTROLLER -->
   <g id="cardController" class="component-card" transform="translate(1160, 300)">
     <rect x="0" y="0" width="280" height="220" rx="16" fill="url(#cardGradOrange)" stroke="url(#glowOrange)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" ease-in-out repeatCount="indefinite" begin="1.5s"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite" begin="1.5s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#ffb800" stroke-width="1" opacity="0.3"/>
 
@@ -474,7 +474,7 @@
   <g id="cardSandbox" class="component-card" transform="translate(1460, 350)">
     <!-- Security boundary glow -->
     <ellipse cx="140" cy="150" rx="200" ry="180" fill="none" stroke="#ffd400" stroke-width="2" stroke-dasharray="10,8" opacity="0.3" filter="url(#glowSoft)">
-      <animate attributeName="stroke-dashoffset" values="0;-100" dur="4s" linear repeatCount="indefinite"/>
+      <animate attributeName="stroke-dashoffset" values="0;-100" dur="4s" calcMode="linear" repeatCount="indefinite"/>
       <animate attributeName="opacity" values="0.2;0.5;0.2" dur="4s" repeatCount="indefinite"/>
     </ellipse>
     <ellipse cx="140" cy="150" rx="210" ry="190" fill="none" stroke="#ff8800" stroke-width="1" opacity="0.15" filter="url(#glowSoft)">
@@ -483,7 +483,7 @@
 
     <!-- Card -->
     <rect x="0" y="0" width="280" height="300" rx="16" fill="url(#cardGradYellow)" stroke="url(#glowYellow)" stroke-width="2" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="2;3;2" dur="3s" ease-in-out repeatCount="indefinite" begin="2s"/>
+      <animate attributeName="stroke-width" values="2;3;2" dur="3s" repeatCount="indefinite" begin="2s"/>
       <animate attributeName="filter" values="url(#dropShadow);url(#glowStrong);url(#dropShadow)" dur="3s" repeatCount="indefinite" begin="2s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#ffd400" stroke-width="1" opacity="0.4"/>
@@ -551,7 +551,7 @@
   <!-- CARD 6: DOCKER RUNNER -->
   <g id="cardDocker" class="component-card" transform="translate(1590, 580)">
     <rect x="0" y="0" width="280" height="240" rx="16" fill="url(#cardGradCyan)" stroke="url(#glowCyan)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" ease-in-out repeatCount="indefinite" begin="3s"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite" begin="3s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#00ffd4" stroke-width="1" opacity="0.3"/>
 
@@ -595,7 +595,7 @@
   <!-- CARD 7: CODE EXECUTION (inside docker area) -->
   <g id="cardExecution" class="component-card" transform="translate(1590, 830)">
     <rect x="0" y="0" width="280" height="140" rx="16" fill="url(#cardGradGreen)" stroke="url(#glowGreen)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="3s" ease-in-out repeatCount="indefinite" begin="4s"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="3s" repeatCount="indefinite" begin="4s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#00ff88" stroke-width="1" opacity="0.3"/>
 
@@ -629,7 +629,7 @@
   <!-- CARD 8: METRICS -->
   <g id="cardMetrics" class="component-card" transform="translate(1160, 640)">
     <rect x="0" y="0" width="280" height="220" rx="16" fill="url(#cardGradGreen)" stroke="url(#glowGreen)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" ease-in-out repeatCount="indefinite" begin="5s"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite" begin="5s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#00ff88" stroke-width="1" opacity="0.3"/>
 
@@ -673,7 +673,7 @@
   <!-- CARD 9: CLEANUP -->
   <g id="cardCleanup" class="component-card" transform="translate(860, 760)">
     <rect x="0" y="0" width="280" height="220" rx="16" fill="url(#cardGradRed)" stroke="url(#glowRed)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" ease-in-out repeatCount="indefinite" begin="6s"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite" begin="6s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#ff4466" stroke-width="1" opacity="0.3"/>
 
@@ -713,7 +713,7 @@
   <!-- CARD 10: RESPONSE / RESULT -->
   <g id="cardResponse" class="component-card" transform="translate(160, 500)">
     <rect x="0" y="0" width="280" height="220" rx="16" fill="url(#cardGradBlue)" stroke="url(#glowBlue)" stroke-width="1.5" filter="url(#dropShadow)">
-      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" ease-in-out repeatCount="indefinite" begin="7s"/>
+      <animate attributeName="stroke-width" values="1.5;2.5;1.5" dur="4s" repeatCount="indefinite" begin="7s"/>
       <animate attributeName="filter" values="url(#dropShadow);url(#glowStrong);url(#dropShadow)" dur="4s" repeatCount="indefinite" begin="7s"/>
     </rect>
     <line x1="16" y1="16" x2="264" y2="16" stroke="#00d4ff" stroke-width="1" opacity="0.3"/>
@@ -790,7 +790,7 @@
     }
 
     .component-card {
-      animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeIn 0.8s ease-out forwards;
       opacity: 1;
     }
     #cardClient { animation-delay: 0.1s; }
@@ -807,7 +807,7 @@
 
     /* Status text cycling */
     #authStatusText, #dockerStatusText, #execStatusText, #cleanupStatusText {
-      animation: statusCycle 3s ease-in-out infinite;
+      animation: statusCycle 3s infinite;
     }
 
     /* Path highlighting on hover */

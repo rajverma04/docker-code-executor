@@ -279,7 +279,7 @@
         <text x="130" y="38" text-anchor="middle">docker run --rm --network=none</text>
         <text x="130" y="50" text-anchor="middle">--memory=256m --cpus=1</text>
         <text x="130" y="62" text-anchor="middle">-v temp:/app:ro image</text>
-        <text x="130" y="74" text-anchor="middle">sh -c "compile && run"</text>
+        <text x="130" y="74" text-anchor="middle">sh -c "compile &amp;&amp; run"</text>
       </g>
     </g>
 
@@ -322,14 +322,14 @@
     <path id="arrow-d5-6" d="M130,475 L130,495" stroke="url(#arrowGrad)" stroke-width="2" fill="none" marker-end="url(#arrowhead)" opacity="0.6"/>
     <circle cx="130" cy="475" r="4" fill="#a855f7"><animateMotion dur="1.5s" repeatCount="indefinite" rotate="auto" begin="3.4s"><mpath href="#arrow-d5-6"/></animateMotion></circle>
 
-    <!-- Step 6: Cleanup & Return -->
+    <!-- Step 6: Cleanup &amp; Return -->
     <g class="node-group docker-step" id="docker-step6" transform="translate(0, 495)">
       <rect x="0" y="0" width="260" height="75" rx="10" fill="white" stroke="#a855f7" stroke-width="2" filter="url(#shadow)">
         <animate attributeName="stroke-width" values="2;3;2" dur="2s" repeatCount="indefinite" begin="3.5s"/>
       </rect>
       <circle cx="25" cy="35" r="16" fill="url(#nodeGradPurple)"><animate attributeName="r" values="16;18;16" dur="1s" repeatCount="indefinite" begin="3.5s"/></circle>
       <text x="25" y="39" text-anchor="middle" font-size="18" fill="white">6</text>
-      <text x="130" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1e293b">Cleanup & Return Result</text>
+      <text x="130" y="25" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#1e293b">Cleanup &amp; Return Result</text>
       <text x="130" y="45" text-anchor="middle" font-family="system-ui, sans-serif" font-size="10" fill="#64748b">fs.rmSync(tempDir) • --rm auto-removes container</text>
       <text x="130" y="60" text-anchor="middle" font-family="system-ui, sans-serif" font-size="9" fill="#94a3b8">{status, output, stderr, runtime, memory}</text>
     </g>
