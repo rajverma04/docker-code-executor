@@ -8,6 +8,8 @@ It natively compiles and runs **C++**, **Java**, and **JavaScript** inside isola
 
 ## 🏗️ Architecture & How Code Is Executed
 
+![Sandboxed Compiler Architecture & Data Workflow](./docs/sandbox-workflow.svg)
+
 ```text
 ┌───────────────────────────────────────┐           HTTP POST (x-api-key)           ┌───────────────────────────────────────┐
 │        CodeNexus Main Backend         │  ──────────────────────────────────────>  │     customCompiler Microservice       │

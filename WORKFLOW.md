@@ -1,10 +1,19 @@
 # Custom Compiler Microservice - Workflow Diagram
 
-> **🎬 Interactive Animated Visualization:** [Open `workflow-animation.svg`](workflow-animation.svg) in a browser for a full animated data flow with CSS + SMIL animations, flowing particles, hover interactions, and clickable tooltips.
+> **🎬 High-Quality Animated Architecture Visualization**
+>
+> **View Options:**
+> - **Interactive HTML:** [Open `docs/sandbox-workflow.html`](docs/sandbox-workflow.html) — Full-screen animated diagram with legend
+> - **Raw SVG:** [Open `docs/sandbox-workflow.svg`](docs/sandbox-workflow.svg) — Embeddable animated SVG
+> - **GitHub Raw:** `https://raw.githubusercontent.com/<user>/<repo>/main/docs/sandbox-workflow.svg` (replace with your repo URL)
+>
+> The visualization features: dark futuristic dashboard aesthetic, glowing component cards, animated data packets flowing along curved paths, pulsing status indicators, security boundary visualization, and a complete request→response lifecycle animation.
 
-![Animated Workflow](workflow-animation.svg)
+![Architecture Preview](docs/sandbox-workflow.svg)
 
 ---
+
+> **Note:** GitHub markdown may not render SVG animations. For the full animated experience, open the HTML file or the raw SVG URL directly in a browser.
 
 ## System Architecture
 

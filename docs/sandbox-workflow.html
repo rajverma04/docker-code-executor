@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sandboxed Compiler - Architecture & Data Flow Visualization</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #050810;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      color: #e8e8e8;
+    }
+    header {
+      padding: 2rem 1rem;
+      text-align: center;
+      border-bottom: 1px solid #1a2a4a;
+      width: 100%;
+      max-width: 1920px;
+      background: linear-gradient(180deg, #0a0f1a 0%, #050810 100%);
+    }
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #00d4ff, #b85cff, #ffd400);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    header p { color: #6a8ab8; font-size: 0.95rem; }
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1920px;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .svg-container {
+      width: 100%;
+      max-width: 1920px;
+      height: auto;
+      aspect-ratio: 16/9;
+    }
+    .svg-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    footer {
+      padding: 1.5rem;
+      text-align: center;
+      color: #4a5a7a;
+      font-size: 0.85rem;
+      border-top: 1px solid #1a2a4a;
+      width: 100%;
+      max-width: 1920px;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem 1.5rem;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    @media (max-width: 1200px) {
+      .svg-container { aspect-ratio: 16/9; }
+    }
+    @media (max-width: 768px) {
+      header h1 { font-size: 1.3rem; }
+      .legend { gap: 0.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sandboxed Compiler</h1>
+    <p>Secure Code Execution Architecture &amp; Data Flow Visualization</p>
+  </header>
+  <main>
+    <div class="svg-container">
+      <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
+        <!-- This will be replaced by the actual SVG content via JS fetch -->
+      </svg>
+    </div>
+  </main>
+  <footer>
+    <p>Animated SVG Architecture Diagram</p>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#00d4ff"></span>Client / API</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#b85cff"></span>Authentication</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#ffb800"></span>Routing / Controller</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#ffd400"></span>Sandbox</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#00ffd4"></span>Docker Runner</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#00ff88"></span>Execution / Metrics</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#ff4466"></span>Cleanup</div>
+    </div>
+  </footer>
+
+  <script>
+    // Load the SVG file and inject it inline for full animation support
+    fetch('sandbox-workflow.svg')
+      .then(response => response.text())
+      .then(svgText => {
+        const container = document.querySelector('.svg-container svg');
+        container.outerHTML = svgText;
+        // Re-run any script initialization
+        const scripts = document.querySelectorAll('script');
+        scripts.forEach(script => {
+          if (script.textContent) {
+            try { eval(script.textContent); } catch(e) { console.warn('Script eval:', e); }
+          }
+        });
+      })
+      .catch(err => {
+        console.error('Failed to load SVG:', err);
+        document.querySelector('.svg-container').innerHTML =
+          '<p style="text-align:center; color:#ff4466; padding:2rem;">Failed to load visualization.<br>Open <code>sandbox-workflow.svg</code> directly in browser.</p>';
+      });
+  </script>
+</body>
+</html>
