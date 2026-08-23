@@ -44,8 +44,17 @@ const executeBatch = async (req, res) => {
  */
 const evaluateProblem = async (req, res) => {
   try {
-    const { userCode, userLanguage, problem, isRunOnly } = req.body;
-    const result = await evaluateProblemSubmission(userCode, userLanguage, problem, isRunOnly);
+    const { userCode, userLanguage, problem, isRunOnly, timeoutMs } = req.body;
+    const perCaseTimeoutMs = Number.isFinite(Number(timeoutMs))
+      ? Number(timeoutMs)
+      : Number(process.env.EXECUTION_TIMEOUT) || 30000;
+    const result = await evaluateProblemSubmission(
+      userCode,
+      userLanguage,
+      problem,
+      Boolean(isRunOnly),
+      perCaseTimeoutMs
+    );
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });

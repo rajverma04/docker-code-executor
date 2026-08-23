@@ -21,7 +21,7 @@ services:
       - MEMORY_LIMIT=256m
       - PIDS_LIMIT=100
       - STORAGE_LIMIT=10m
-      - EXECUTION_TIMEOUT=10000
+      - EXECUTION_TIMEOUT=30000
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

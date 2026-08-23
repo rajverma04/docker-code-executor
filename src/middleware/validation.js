@@ -151,6 +151,13 @@ function validateProblemEvaluation(req, res, next) {
     return res.status(400).json({ error: 'referenceSolution must be an array' });
   }
 
+  if (req.body.timeoutMs !== undefined) {
+    const timeout = Number(req.body.timeoutMs);
+    if (isNaN(timeout) || timeout < 1000 || timeout > 30000) {
+      return res.status(400).json({ error: 'timeoutMs must be a number between 1000 and 30000' });
+    }
+  }
+
   next();
 }
 

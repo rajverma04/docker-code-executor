@@ -1,4 +1,4 @@
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
@@ -7,7 +7,7 @@ const CPU_LIMIT = process.env.CPU_LIMIT || '1';
 const MEMORY_LIMIT = process.env.MEMORY_LIMIT || '256m';
 const PIDS_LIMIT = process.env.PIDS_LIMIT || '100';
 
-const MEM_PEAK_CMD = 'echo __MEM_PEAK__:\\$(cat /sys/fs/cgroup/memory.current 2>/dev/null || cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes 2>/dev/null || echo 0)';
+const MEM_PEAK_CMD = 'echo __MEM_PEAK__:$(cat /sys/fs/cgroup/memory.current 2>/dev/null || cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes 2>/dev/null || echo 0)';
 
 /**
  * Supported Language Configurations with cgroups RAM memory tracking
@@ -88,18 +88,27 @@ const executeSingleCode = (code, input = '', language = 'javascript', timeoutMs 
       fs.writeFileSync(codeFilePath, code || '');
       fs.writeFileSync(inputFilePath, input || '');
 
-      const dockerCmd = `docker run --rm \
-        --network=none \
-        --memory=${MEMORY_LIMIT} \
-        --cpus=${CPU_LIMIT} \
-        --pids-limit=${PIDS_LIMIT} \
-        -v "${tempDir}:/app:ro" \
-        ${config.dockerImage} \
-        sh -c "${compileAndRun}"`;
+      // Invoke Docker directly instead of passing a nested `docker ...` command
+      // through a shell. This makes Node's timeout apply to the Docker process
+      // itself and prevents requests from hanging after a timeout.
+      const dockerArgs = [
+        'run', '--rm',
+        '--network=none',
+        `--memory=${MEMORY_LIMIT}`,
+        `--cpus=${CPU_LIMIT}`,
+        `--pids-limit=${PIDS_LIMIT}`,
+        '-v', `${tempDir}:/app:ro`,
+        config.dockerImage,
+        'sh', '-c', compileAndRun
+      ];
 
       const startTime = process.hrtime.bigint();
 
-      exec(dockerCmd, { timeout: timeoutMs, maxBuffer: 10 * 1024 * 1024 }, (error, stdout, stderr) => {
+      execFile('docker', dockerArgs, {
+        timeout: timeoutMs,
+        killSignal: 'SIGKILL',
+        maxBuffer: 10 * 1024 * 1024
+      }, (error, stdout, stderr) => {
         const endTime = process.hrtime.bigint();
         const wallClockRuntimeMs = Number(endTime - startTime) / 1e6;
         const exactRuntimeSec = Number((wallClockRuntimeMs / 1000).toFixed(3));
@@ -108,7 +117,7 @@ const executeSingleCode = (code, input = '', language = 'javascript', timeoutMs 
           fs.rmSync(tempDir, { recursive: true, force: true });
         } catch (cleanupErr) {}
 
-        if (error && (error.killed || error.signal === 'SIGTERM')) {
+        if (error && (error.killed || error.signal === 'SIGTERM' || error.signal === 'SIGKILL' || error.code === 'ETIMEDOUT')) {
           return resolve({
             status: 'tle',
             output: '',
