@@ -46,9 +46,15 @@ const executeBatchCode = async (code, language, testCases = [], timeoutMs = 1000
     };
   }
 
+  // Timeout applies to each test case. Normalize it so undefined or invalid
+  // values cannot accidentally create an unexpectedly short run.
+  const caseTimeoutMs = Number.isFinite(Number(timeoutMs))
+    ? Math.min(Math.max(Number(timeoutMs), 1000), 30000)
+    : 10000;
+
   for (let i = 0; i < testCases.length; i++) {
     const testCase = testCases[i];
-    const runResult = await executeSingleCode(code, testCase.input, language, timeoutMs);
+    const runResult = await executeSingleCode(code, testCase.input, language, caseTimeoutMs);
     
     totalRuntime += (runResult.runtime || 0);
     peakMemory = Math.max(peakMemory, runResult.memory || 0);
@@ -139,7 +145,7 @@ const executeBatchCode = async (code, language, testCases = [], timeoutMs = 1000
  * @param {boolean} isRunOnly - If true, evaluates visibleTestCases; if false, evaluates hiddenTestCases
  * @returns {Promise<object>}
  */
-const evaluateProblemSubmission = async (userCode, userLanguage, problem, isRunOnly = false) => {
+const evaluateProblemSubmission = async (userCode, userLanguage, problem, isRunOnly = false, timeoutMs = 30000) => {
   const targetTestCases = isRunOnly ? (problem.visibleTestCases || []) : (problem.hiddenTestCases || []);
   
   if (!targetTestCases || targetTestCases.length === 0) {
@@ -162,7 +168,7 @@ const evaluateProblemSubmission = async (userCode, userLanguage, problem, isRunO
     // If expected output is missing, execute reference solution dynamically to generate output
     if ((expectedOut === undefined || expectedOut === null || expectedOut === '') && Array.isArray(problem.referenceSolution) && problem.referenceSolution.length > 0) {
       const refSol = problem.referenceSolution.find(r => r.language === userLanguage) || problem.referenceSolution[0];
-      const refRun = await executeSingleCode(refSol.completeCode, tc.input, refSol.language, 10000);
+      const refRun = await executeSingleCode(refSol.completeCode, tc.input, refSol.language, 30000);
       expectedOut = refRun.output;
     }
 
@@ -173,7 +179,7 @@ const evaluateProblemSubmission = async (userCode, userLanguage, problem, isRunO
     });
   }
 
-  return await executeBatchCode(userCode, userLanguage, preparedTestCases, 10000, true);
+  return await executeBatchCode(userCode, userLanguage, preparedTestCases, timeoutMs, true);
 };
 
 module.exports = { executeBatchCode, evaluateProblemSubmission, normalizeOutput };
